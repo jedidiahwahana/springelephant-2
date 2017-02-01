@@ -9,3 +9,6 @@ local.properties
 app/build
 build
 src/main/resources/application.properties
+.classpath
+.project
+.settings
