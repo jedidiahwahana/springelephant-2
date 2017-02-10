@@ -33,6 +33,9 @@ import com.linecorp.bot.client.LineSignatureValidator;
 public class LineBotController
 {
     @Autowired
+    PersonDao mDao;
+    
+    @Autowired
     @Qualifier("com.linecorp.channel_secret")
     String lChannelSecret;
     
@@ -68,9 +71,107 @@ public class LineBotController
         String messageText = payload.events[0].message.text;
         System.out.println("Text Message: " + messageText);
         
-        pushManual(idTarget, messageText);
+        processText(idTarget, messageText);
          
         return new ResponseEntity<String>(HttpStatus.OK);
+    }
+    
+    private void processText(String aTargetId, String aText)
+    {
+        System.out.println("message text: " + aText + " from: " + aTargetId);
+        
+        if (aText.indexOf("\"") == -1){
+            pushManual(aTargetId, "Unknown keyword");
+            return;
+        }
+        
+        String [] words=aText.trim().split("\\s+");
+        String intent=words[0];
+        System.out.println("intent: " + intent);
+        String msg = " ";
+        
+        String name = " ";
+        String phoneNumber = " ";
+        
+        if(intent.equalsIgnoreCase("reg"))
+        {
+            String target=words.length>1 ? words[1] : "";
+            if (target.length()<=3)
+            {
+                msg = "Need more than 3 character to find person";
+            }
+            else
+            {
+                name = aText.substring(aText.indexOf("\"") + 1, aText.lastIndexOf("\""));
+                System.out.println("Name: " + name);
+                phoneNumber = aText.substring(aText.indexOf("#") + 1);
+                System.out.println("Phone Number: " + phoneNumber);
+                String status = RegProcessor(name, phoneNumber);
+                pushManual(aTargetId, status);
+                return;
+            }
+        }
+        else if(intent.equalsIgnoreCase("find"))
+        {
+            name = aText.substring(aText.indexOf("\"") + 1, aText.lastIndexOf("\""));
+            System.out.println("Name: " + name);
+            String txtMessage = FindProcessor(name);
+            pushManual(aTargetId, txtMessage);
+            return;
+        }
+        
+        // if msg is invalid
+        if(msg == " ")
+        {
+            pushManual(aTargetId, "Unknown keyword");
+        }
+    }
+    
+    private String RegProcessor(String aName, String aPhoneNumber){
+        String regStatus;
+        String exist = FindProcessor(aName);
+        if(exist=="Person not found")
+        {
+            int reg=mDao.registerPerson(aName, aPhoneNumber);
+            if(reg==1)
+            {
+                regStatus="Successfully Registered";
+            }
+            else
+            {
+                regStatus="Registration process failed";
+            }
+        }
+        else
+        {
+            regStatus="Already registered";
+        }
+        
+        return regStatus;
+    }
+    
+    private String FindProcessor(String aName){
+        String txt="Find Result:";
+        List<Person> self=mDao.getByName("%"+aName+"%");
+        if(self.size() > 0)
+        {
+            for (int i=0; i<self.size(); i++){
+                Person prs=self.get(i);
+                txt=txt+"\n\n";
+                txt=txt+getPersonString(prs);
+            }
+            
+        }
+        else
+        {
+            txt="Person not found";
+        }
+        return txt;
+    }
+    
+    private String getPersonString(Person aPerson)
+    {
+        return String.format("Name: %s\nPhone Number: %s\n", aPerson.name, aPerson.phoneNumber);
     }
 
     private void pushManual(String id_target, String message_text){
