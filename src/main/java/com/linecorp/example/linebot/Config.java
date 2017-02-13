@@ -22,7 +22,7 @@ public class Config
     {
         String sServices=System.getenv("VCAP_SERVICES");
         JSONObject jServices=new JSONObject(sServices);
-        JSONArray aElephant=jServices.getJSONArray("compose-for-postgresql");
+        JSONArray aElephant=jServices.getJSONArray("elephantsql");
         JSONObject jElephant=aElephant.getJSONObject(0);
         JSONObject jCredentials=jElephant.getJSONObject("credentials");
         String dbUrl=jCredentials.getString("uri");
