@@ -26,6 +26,8 @@ import org.json.JSONObject;
 import org.json.JSONArray;
 import com.google.gson.Gson;
 
+import java.sql.*;
+
 import com.linecorp.bot.client.LineSignatureValidator;
 
 @RestController
@@ -72,7 +74,7 @@ public class LineBotController
         System.out.println("Text Message: " + messageText);
         
         processText(idTarget, messageText);
-         
+        
         return new ResponseEntity<String>(HttpStatus.OK);
     }
     
@@ -157,7 +159,7 @@ public class LineBotController
         {
             for (int i=0; i<self.size(); i++){
                 Person prs=self.get(i);
-                txt=txt+"\n\n";
+                txt=txt+"\\n\\n";
                 txt=txt+getPersonString(prs);
             }
             
@@ -171,7 +173,7 @@ public class LineBotController
     
     private String getPersonString(Person aPerson)
     {
-        return String.format("Name: %s\nPhone Number: %s\n", aPerson.name, aPerson.phoneNumber);
+        return String.format("Name: %s\\nPhone Number: %s\\n", aPerson.name, aPerson.phoneNumber);
     }
 
     private void pushManual(String id_target, String message_text){

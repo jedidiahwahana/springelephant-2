@@ -22,15 +22,16 @@ public class Config
     {
         String sServices=System.getenv("VCAP_SERVICES");
         JSONObject jServices=new JSONObject(sServices);
-        JSONArray aElephant=jServices.getJSONArray("elephantsql");
+        JSONArray aElephant=jServices.getJSONArray("compose-for-postgresql");
         JSONObject jElephant=aElephant.getJSONObject(0);
         JSONObject jCredentials=jElephant.getJSONObject("credentials");
         String dbUrl=jCredentials.getString("uri");
-//        String jdbcUrl = "jdbc:" + dbUrl;
+        dbUrl = dbUrl.replaceAll("postgres", "postgresql");
+        String jdbcUrl = "jdbc:" + dbUrl;
         
         DriverManagerDataSource ds=new DriverManagerDataSource();
         ds.setDriverClassName("org.postgresql.Driver");
-        ds.setUrl(dbUrl);
+        ds.setUrl(jdbcUrl);
         
         return ds;
     }

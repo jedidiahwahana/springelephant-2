@@ -11,6 +11,10 @@ This repository demonstrates how to create a basic bot with LINE Messaging API, 
 * Make *manifest.yml* file
 	
 	```yml
+	declared-services:
+     <YOUR_SERVICE_NAME>:
+     label: elephantsql
+     plan: turtle
 	applications:
 	- path: <YOUR_WAR_FILE_PATH>
   	  memory: 512M
@@ -19,6 +23,8 @@ This repository demonstrates how to create a basic bot with LINE Messaging API, 
   	  name: <YOUR_BLUEMIX_APP_NAME>
   	  host: <YOUR_BLUEMIX_APP_NAME>
   	  disk_quota: 1024M
+  	  services:
+      - <YOUR_SERVICE_NAME>
 	```
 	
 * Get Database URL from environment variable in Bluemix

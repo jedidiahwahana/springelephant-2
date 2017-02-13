@@ -1,3 +1,8 @@
+declared-services:
+  ElephantSQL-ia:
+    label: elephantsql
+    plan: turtle
+
 applications:
 - path: build/libs/psql-bot-bluemix-0.1.0.war
   memory: 512M
@@ -6,3 +11,5 @@ applications:
   name: psql-bot-bluemix
   host: psql-bot-bluemix
   disk_quota: 1024M
+  services:
+    - ElephantSQL-ia
