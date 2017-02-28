@@ -1,5 +1,5 @@
 
-package com.linecorp.example.linebot;
+package com.linecorp.example.springelephant;
 
 public class Person
 {

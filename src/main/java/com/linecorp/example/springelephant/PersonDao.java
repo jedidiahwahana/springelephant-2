@@ -1,7 +1,7 @@
-package com.linecorp.example.linebot;
+package com.linecorp.example.springelephant;
 
 import java.util.List;
-import com.linecorp.example.linebot.Person;
+import com.linecorp.example.springelephant.Person;
 
 public interface PersonDao
 {

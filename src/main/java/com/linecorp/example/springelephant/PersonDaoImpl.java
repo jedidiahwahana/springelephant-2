@@ -1,5 +1,5 @@
 
-package com.linecorp.example.linebot;
+package com.linecorp.example.springelephant;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,14 +8,19 @@ import java.util.Map;
 import java.util.List;
 import java.util.Vector;
 import javax.sql.DataSource;
+import javax.annotation.Resource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
-import com.linecorp.example.linebot.Person;
+import com.linecorp.example.springelephant.Person;
 
 public class PersonDaoImpl implements PersonDao
 {
+    @Resource(name="jdbc/ElephantSQL-65")
+    DataSource aDataSource;
+    
+    
     private final static String SQL_SELECT_ALL="SELECT id, name, phone_number FROM phonebook";
     private final static String SQL_GET_BY_NAME=SQL_SELECT_ALL + " WHERE LOWER(name) LIKE LOWER(?);";
     private final static String SQL_REGISTER="INSERT INTO phonebook (name, phone_number) VALUES (?, ?);";
@@ -71,6 +76,7 @@ public class PersonDaoImpl implements PersonDao
 
     public List<Person> getByName(String aName)
     {
+        System.out.println("getByName function is called");
         return mJdbc.query(SQL_GET_BY_NAME, new Object[]{"%"+aName+"%"}, MULTIPLE_RS_EXTRACTOR);
     }
 

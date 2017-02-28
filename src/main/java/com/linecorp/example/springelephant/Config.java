@@ -1,5 +1,5 @@
 
-package com.linecorp.example.linebot;
+package com.linecorp.example.springelephant;
 
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,24 +28,16 @@ public class Config
         String dbUrl=jCredentials.getString("uri");
         dbUrl = dbUrl.replaceAll("postgres", "postgresql");
         String jdbcUrl = "jdbc:" + dbUrl;
+        System.out.println("Database URL: " + jdbcUrl);
         
         DriverManagerDataSource ds=new DriverManagerDataSource();
+        System.out.println("Datasource made");
         ds.setDriverClassName("org.postgresql.Driver");
+        System.out.println("Driver Class Name set");
         ds.setUrl(jdbcUrl);
+        System.out.println("URL set");
         
         return ds;
-    }
-    
-    @Bean(name="com.linecorp.channel_secret")
-    public String getChannelSecret()
-    {
-        return mEnv.getProperty("com.linecorp.channel_secret");
-    }
-    
-    @Bean(name="com.linecorp.channel_access_token")
-    public String getChannelAccessToken()
-    {
-        return mEnv.getProperty("com.linecorp.channel_access_token");
     }
     
     @Bean

@@ -1,15 +1,15 @@
 declared-services:
-  ElephantSQL-ia:
+  ElephantSQL-65:
     label: elephantsql
     plan: turtle
 
 applications:
-- path: build/libs/psql-bot-bluemix-0.1.0.war
+- path: build/libs/springelephant-0.1.0.war
   memory: 512M
   instances: 1
   domain: mybluemix.net
-  name: psql-bot-bluemix
-  host: psql-bot-bluemix
+  name: springelephant
+  host: springelephant
   disk_quota: 1024M
   services:
-    - ElephantSQL-ia
+    - ElephantSQL-65
