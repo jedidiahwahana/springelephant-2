@@ -1,10 +1,8 @@
-# psql-bot-bluemix #
+# springelephant #
 
-This repository demonstrates how to create a basic bot with LINE Messaging API, ElephantSQL (PostgreSQL), and bluemix.
+This repository demonstrates how to create a basic web application with Spring Framework, ElephantSQL (PostgreSQL), and bluemix.
 
 ### How do I get set up? ###
-
-* Configure your bot channel ini LINE@ developer
 
 * Bind ElephantSQL service to your APP
 
