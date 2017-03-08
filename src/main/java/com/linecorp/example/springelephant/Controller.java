@@ -26,13 +26,13 @@ import org.json.JSONObject;
 import org.json.JSONArray;
 
 import java.sql.*;
+import com.linecorp.example.springelephant.db.*;
 
 @RestController
 @RequestMapping(value="/line")
 public class Controller
 {
-    @Autowired
-    PersonDao mDao;
+    PostgresHelper client = new PostgresHelper(DbContract.DB_URL);
     
     @RequestMapping(value="/callback", method=RequestMethod.GET)
     public ResponseEntity<String> callback()
@@ -45,51 +45,43 @@ public class Controller
     }
     
     private String RegProcessor(String aName, String aPhoneNumber){
-        String regStatus;
-        String exist = FindProcessor(aName);
-        if(exist=="Person not found")
-        {
-            int reg=mDao.registerPerson(aName, aPhoneNumber);
-            if(reg==1)
-            {
-                regStatus="Successfully Registered";
+        String regStatus = "";
+        try {
+            if (client.connect()) {
+                System.out.println("DB connected");
+                if (client.insert("phonebook", aName, aPhoneNumber) == 1) {
+                    regStatus = "Record added";
+                }
             }
-            else
-            {
-                regStatus="Registration process failed";
-            }
+            
+        } catch (ClassNotFoundException | SQLException e) {
+            regStatus = "Exception is raised ";
+            e.printStackTrace();
         }
-        else
+        catch(Exception e)
         {
-            regStatus="Already registered";
+            regStatus = "Unknown exception occurs";
         }
-        
+
         return regStatus;
     }
     
     private String FindProcessor(String aName){
-        String txt="Find Result:";
-        System.out.println("Call getByName function");
-        List<Person> self=mDao.getByName("%"+aName+"%");
-        System.out.println("getByName function finished");
-        if(self.size() > 0)
-        {
-            for (int i=0; i<self.size(); i++){
-                Person prs=self.get(i);
-                txt=txt+"\\n\\n";
-                txt=txt+getPersonString(prs);
+        String txt="Find Result: ";
+        Person existsData = null;
+        try {
+            if (client.connect()) {
+                existsData = client.getPerson("phonebook", aName);
+                txt = existsData.name + " " + existsData.phoneNumber;
             }
-            
+        } catch (ClassNotFoundException | SQLException e) {
+            txt = "Exception is raised ";
+            e.printStackTrace();
         }
-        else
+        catch(Exception e)
         {
-            txt="Person not found";
+            txt = "Unknown exception occurs";
         }
         return txt;
-    }
-    
-    private String getPersonString(Person aPerson)
-    {
-        return String.format("Name: %s\\nPhone Number: %s\\n", aPerson.name, aPerson.phoneNumber);
     }
 }

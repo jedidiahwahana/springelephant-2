@@ -1,5 +1,5 @@
 declared-services:
-  ElephantSQL-65:
+  ElephantSQL-zn:
     label: elephantsql
     plan: turtle
 
@@ -8,8 +8,8 @@ applications:
   memory: 512M
   instances: 1
   domain: mybluemix.net
-  name: springelephant
-  host: springelephant
+  name: spring-elephant
+  host: spring-elephant
   disk_quota: 1024M
   services:
-    - ElephantSQL-65
+    - ElephantSQL-zn
