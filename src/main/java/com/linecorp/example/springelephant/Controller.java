@@ -32,8 +32,8 @@ import com.linecorp.example.springelephant.db.*;
 @RequestMapping(value="/line")
 public class Controller
 {
-    PostgresHelper client = new PostgresHelper(DbContract.DB_URL);
-    
+    PostgresHelper client = new PostgresHelper(DbContract.DB_URL, DbContract.DB_USERNAME, DbContract.DB_PASSWORD);
+
     @RequestMapping(value="/callback", method=RequestMethod.GET)
     public ResponseEntity<String> callback()
     {
@@ -43,7 +43,7 @@ public class Controller
         System.out.println("Find result: " + findResult);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
-    
+
     private String RegProcessor(String aName, String aPhoneNumber){
         String regStatus = "";
         try {
@@ -53,7 +53,7 @@ public class Controller
                     regStatus = "Record added";
                 }
             }
-            
+
         } catch (ClassNotFoundException | SQLException e) {
             regStatus = "Exception is raised ";
             e.printStackTrace();
@@ -65,7 +65,7 @@ public class Controller
 
         return regStatus;
     }
-    
+
     private String FindProcessor(String aName){
         String txt="Find Result: ";
         Person existsData = null;
