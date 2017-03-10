@@ -11,42 +11,46 @@ import org.json.JSONArray;
 import com.linecorp.example.springelephant.Person;
 
 public class PostgresHelper {
-    
+
     private Connection conn;
     private String dbUrl;
-    
+    private String dbUsername;
+    private String dbPassword;
+
     //we don't like this constructor
     protected PostgresHelper() {}
-    
-    public PostgresHelper(String dbUrl) {
+
+    public PostgresHelper(String dbUrl, String dbUsername, String dbPassword) {
         this.dbUrl = dbUrl;
+        this.dbUsername = dbUsername;
+        this.dbPassword = dbPassword;
     }
-    
+
     public boolean connect() throws SQLException, ClassNotFoundException {
         if (dbUrl.isEmpty()) {
             throw new SQLException("Database credentials missing");
         }
-        
+
         Class.forName("org.postgresql.Driver");
-        this.conn = DriverManager.getConnection(this.dbUrl);
+        this.conn = DriverManager.getConnection(this.dbUrl, this.dbUsername, this.dbPassword);
         return true;
     }
-    
+
     public ResultSet execQuery(String query) throws SQLException {
         return this.conn.createStatement().executeQuery(query);
     }
-    
+
     public int insert(String table, String aName, String aPhoneNumber) throws SQLException {
-        
+
         String query = String.format("INSERT INTO %s (name, phone_number) VALUES (%s, %s)", table,
                                      aName, aPhoneNumber);
         System.out.println("SQL: " + query);
-        
+
         return this.conn.createStatement().executeUpdate(query);
     }
-    
+
     public Person getPerson(String table, String aName) throws SQLException {
-        
+
         String query = String.format("SELECT * FROM %s WHERE name = '%s')", table, aName);
         System.out.println("SQL: " + query);
         ResultSet rs = this.conn.createStatement().executeQuery(query);
@@ -56,7 +60,7 @@ public class PostgresHelper {
         Person existData = null;
         existData.name = existName;
         existData.phoneNumber = existPhoneNumber;
-        
+
         return existData;
     }
 }
