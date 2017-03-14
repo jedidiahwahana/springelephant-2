@@ -42,7 +42,7 @@ public class PostgresHelper {
 
     public int insert(String table, String aName, String aPhoneNumber) throws SQLException {
 
-        String query = String.format("INSERT INTO %s (name, phone_number) VALUES (%s, %s)", table,
+        String query = String.format("INSERT INTO %s (name, phone_number) VALUES ('%s', '%s')", table,
                                      aName, aPhoneNumber);
         System.out.println("SQL: " + query);
 
